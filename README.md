@@ -111,7 +111,7 @@ Aplikasi akan berjalan di `http://127.0.0.1:8000`
 ## 👤 Default Accounts
 
 ### Admin Account
-- **Email:** admin@company.com
+- **Email:** superadmin@company.com
 - **Password:** password123
 
 ### Editor Account
