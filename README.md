@@ -1,61 +1,355 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Company Profile Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem manajemen company profile dengan fitur authentication, CRUD articles, dan management profile perusahaan yang dibangun menggunakan Laravel 11 dan MongoDB.
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Authentication System**
+  - Login & Logout
+  - Session management
+  - Protected routes dengan middleware
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Article Management**
+  - Create, Read, Update, Delete (CRUD)
+  - Image upload untuk featured image
+  - Status management (Draft/Published)
+  - Auto-generate slug dari title
+  - Pagination
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Company Profile Management**
+  - Update company information
+  - Logo upload
+  - Vision & Mission management
+  - Social media links (Facebook, Instagram, Twitter, LinkedIn)
+  - Contact information
 
-## Learning Laravel
+- **Dashboard**
+  - Statistics overview
+  - Quick actions
+  - Article counts by status
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🛠️ Tech Stack
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Backend:** Laravel 11
+- **Database:** MongoDB
+- **Frontend:** Bootstrap 5, Blade Template
+- **Authentication:** Laravel Auth with MongoDB
+- **File Storage:** Laravel Storage (Local)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📋 Requirements
 
-## Laravel Sponsors
+- PHP >= 8.2
+- Composer
+- MongoDB >= 4.0
+- MongoDB PHP Extension
+- Node.js & NPM (optional, untuk asset compilation)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🔧 Installation
 
-### Premium Partners
+### 1. Clone Repository
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+git clone <repository-url>
+cd company-profile
+```
 
-## Contributing
+### 2. Install Dependencies
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+composer install
+```
 
-## Code of Conduct
+### 3. Environment Configuration
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Copy `.env.example` ke `.env`:
 
-## Security Vulnerabilities
+```bash
+cp .env.example .env
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Update konfigurasi database di `.env`:
 
-## License
+```env
+DB_CONNECTION=mongodb
+DB_HOST=127.0.0.1
+DB_PORT=27017
+DB_DATABASE=company_profile
+DB_USERNAME=
+DB_PASSWORD=
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 4. Generate Application Key
+
+```bash
+php artisan key:generate
+```
+
+### 5. Create Storage Link
+
+```bash
+php artisan storage:link
+```
+
+### 6. Seed Database
+
+```bash
+php artisan db:seed
+```
+
+Ini akan membuat:
+- 2 user accounts (admin & editor)
+- 1 company profile default
+
+### 7. Run Application
+
+```bash
+php artisan serve
+```
+
+Aplikasi akan berjalan di `http://127.0.0.1:8000`
+
+## 👤 Default Accounts
+
+### Admin Account
+- **Email:** admin@company.com
+- **Password:** password123
+
+### Editor Account
+- **Email:** editor@company.com
+- **Password:** password123
+
+## 📁 Project Structure
+
+```
+company-profile/
+├── app/
+│   ├── Http/
+│   │   └── Controllers/
+│   │       ├── Auth/
+│   │       │   ├── LoginController.php
+│   │       │   └── LogoutController.php
+│   │       ├── ArticleController.php
+│   │       ├── CompanyProfileController.php
+│   │       └── DashboardController.php
+│   └── Models/
+│       ├── User.php
+│       ├── Article.php
+│       └── CompanyProfile.php
+├── database/
+│   └── seeders/
+│       ├── UserSeeder.php
+│       └── CompanyProfileSeeder.php
+├── resources/
+│   └── views/
+│       ├── layouts/
+│       │   └── app.blade.php
+│       ├── auth/
+│       │   └── login.blade.php
+│       ├── articles/
+│       │   ├── index.blade.php
+│       │   ├── create.blade.php
+│       │   ├── edit.blade.php
+│       │   └── show.blade.php
+│       ├── company-profile/
+│       │   ├── index.blade.php
+│       │   └── edit.blade.php
+│       └── dashboard.blade.php
+└── routes/
+    └── web.php
+```
+
+## 🎯 Usage
+
+### Login
+1. Akses `http://127.0.0.1:8000/login`
+2. Masukkan email dan password
+3. Klik "Login"
+
+### Manage Articles
+1. Dari dashboard, klik "Articles" di navbar
+2. Klik "Create New Article" untuk membuat artikel baru
+3. Isi form (Title, Content, Image, Status)
+4. Submit form
+5. Untuk edit/delete, gunakan tombol di table list
+
+### Manage Company Profile
+1. Dari dashboard, klik "Company Profile" di navbar
+2. Klik "Edit Profile"
+3. Update informasi perusahaan
+4. Upload logo (optional)
+5. Submit form
+
+## 🗄️ Database Collections
+
+### users
+```javascript
+{
+  _id: ObjectId,
+  name: String,
+  email: String,
+  password: String (hashed),
+  created_at: Date,
+  updated_at: Date
+}
+```
+
+### articles
+```javascript
+{
+  _id: ObjectId,
+  title: String,
+  slug: String,
+  content: Text,
+  image: String (path),
+  author: String,
+  status: Enum ['draft', 'published'],
+  published_at: Date,
+  created_at: Date,
+  updated_at: Date
+}
+```
+
+### company_profiles
+```javascript
+{
+  _id: ObjectId,
+  company_name: String,
+  description: Text,
+  address: Text,
+  phone: String,
+  email: String,
+  logo: String (path),
+  vision: Text,
+  mission: Text,
+  social_media: {
+    facebook: String,
+    instagram: String,
+    twitter: String,
+    linkedin: String
+  },
+  created_at: Date,
+  updated_at: Date
+}
+```
+
+## 🔒 Security
+
+- Password di-hash menggunakan bcrypt
+- CSRF protection enabled
+- Form validation di backend
+- File upload validation (type, size)
+- Authentication middleware untuk protected routes
+
+## 📝 API Endpoints
+
+### Authentication
+- `GET /login` - Show login form
+- `POST /login` - Process login
+- `POST /logout` - Logout user
+
+### Articles
+- `GET /articles` - List all articles
+- `GET /articles/create` - Show create form
+- `POST /articles` - Store new article
+- `GET /articles/{id}` - Show article detail
+- `GET /articles/{id}/edit` - Show edit form
+- `PUT /articles/{id}` - Update article
+- `DELETE /articles/{id}` - Delete article
+
+### Company Profile
+- `GET /company-profile` - View company profile
+- `GET /company-profile/edit` - Show edit form
+- `PUT /company-profile` - Update company profile
+
+## 🐛 Troubleshooting
+
+### Error: "Class 'MongoDB\Driver\Manager' not found"
+Install MongoDB PHP extension:
+
+**Ubuntu/Debian:**
+```bash
+sudo apt-get install php-mongodb
+```
+
+**Windows:**
+Download `php_mongodb.dll` dan tambahkan di `php.ini`:
+```ini
+extension=mongodb
+```
+
+### Error: "Storage not linked"
+```bash
+php artisan storage:link
+```
+
+### Error: "Route not found"
+```bash
+php artisan route:clear
+php artisan config:clear
+php artisan cache:clear
+```
+
+### MongoDB Connection Failed
+Pastikan MongoDB service running:
+
+**Windows:**
+```bash
+net start MongoDB
+```
+
+**Linux/Mac:**
+```bash
+sudo systemctl start mongod
+```
+
+## 🚀 Deployment
+
+### Production Checklist
+
+1. **Set environment to production**
+   ```env
+   APP_ENV=production
+   APP_DEBUG=false
+   ```
+
+2. **Optimize Laravel**
+   ```bash
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   ```
+
+3. **Setup proper file permissions**
+   ```bash
+   chmod -R 775 storage bootstrap/cache
+   ```
+
+4. **Use queue for background jobs** (optional)
+   ```bash
+   php artisan queue:work
+   ```
+
+5. **Setup backup untuk MongoDB**
+   ```bash
+   mongodump --db=company_profile --out=/backup/
+   ```
+
+## 📄 License
+
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## 👨‍💻 Author
+
+Developed with ❤️ using Laravel 11 & MongoDB
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+## 📧 Support
+
+For support, email your-email@example.com or create an issue in this repository.
+
+---
+
+**Happy Coding! 🚀
