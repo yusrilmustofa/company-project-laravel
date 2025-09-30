@@ -31,6 +31,10 @@
                             @endif
                         </small>
                         <br>
+                        @if($article->category)
+                            <span class="badge bg-info mt-2">{{ $article->category->name }}</span>
+                        @endif
+                        
                         <span class="badge bg-{{ $article->status === 'published' ? 'success' : 'warning' }} mt-2">
                             {{ ucfirst($article->status) }}
                         </span>

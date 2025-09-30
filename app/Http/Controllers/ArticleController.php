@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +19,8 @@ class ArticleController extends Controller
 
     public function create()
     {
-        return view('articles.create');
+        $categories = Category::where('status', 'active')->orderBy('name')->get();
+        return view('articles.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -28,6 +30,7 @@ class ArticleController extends Controller
             'content' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'status' => 'required|in:draft,published',
+            'category_id' => 'required|exists:mongodb.categories,_id',
         ]);
 
         // FIX: Gunakan Auth facade
@@ -55,7 +58,8 @@ class ArticleController extends Controller
 
     public function edit(Article $article)
     {
-        return view('articles.edit', compact('article'));
+        $categories = Category::where('status', 'active')->orderBy('name')->get();
+        return view('articles.edit', compact('article', 'categories'));
     }
 
     public function update(Request $request, Article $article)
@@ -65,6 +69,7 @@ class ArticleController extends Controller
             'content' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'status' => 'required|in:draft,published',
+            'category_id' => 'required|exists:mongodb.categories,_id',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
