@@ -1,13 +1,13 @@
 # Company Profile Management System
 
-Sistem manajemen company profile dengan fitur authentication, CRUD articles, dan management profile perusahaan yang dibangun menggunakan Laravel 11 dan MongoDB.
+Sistem manajemen company profile dengan fitur authentication, CRUD articles, dan management profile perusahaan yang dibangun menggunakan Laravel 11 dan MongoDB dengan Docker.
 
 ## 🚀 Features
 
 - **Authentication System**
   - Login & Logout
   - Session management
-  - Protected routes dengan middleware
+  - Protected routes
 
 - **Article Management**
   - Create, Read, Update, Delete (CRUD)
@@ -31,20 +31,26 @@ Sistem manajemen company profile dengan fitur authentication, CRUD articles, dan
 ## 🛠️ Tech Stack
 
 - **Backend:** Laravel 11
-- **Database:** MongoDB
+- **Database:** MongoDB 7.0
 - **Frontend:** Bootstrap 5, Blade Template
 - **Authentication:** Laravel Auth with MongoDB
 - **File Storage:** Laravel Storage (Local)
+- **Containerization:** Docker & Docker Compose
+- **Web Server:** Nginx (Alpine)
+- **PHP:** 8.2-FPM
 
 ## 📋 Requirements
 
+- Docker Desktop (Windows/Mac/Linux)
+- Git
+
+**Atau tanpa Docker:**
 - PHP >= 8.2
 - Composer
 - MongoDB >= 4.0
 - MongoDB PHP Extension
-- Node.js & NPM (optional, untuk asset compilation)
 
-## 🔧 Installation
+## 🐳 Installation with Docker (Recommended)
 
 ### 1. Clone Repository
 
@@ -53,21 +59,65 @@ git clone <repository-url>
 cd company-profile
 ```
 
-### 2. Install Dependencies
+### 2. Setup Docker Files
+
+Pastikan file-file Docker sudah ada:
+- `Dockerfile`
+- `docker-compose.yml`
+- `docker/nginx/conf.d/default.conf`
+- `docker/mongodb/init-mongo.js`
+
+### 3. Build & Start Containers
 
 ```bash
+docker-compose up -d --build
+```
+
+Tunggu sampai semua container running (pertama kali bisa 5-10 menit).
+
+### 4. Install Dependencies
+
+```bash
+docker-compose exec app composer install
+```
+
+### 5. Setup Application
+
+```bash
+# Generate application key
+docker-compose exec app php artisan key:generate
+
+# Create storage link
+docker-compose exec app php artisan storage:link
+
+# Seed database
+docker-compose exec app php artisan db:seed
+```
+
+### 6. Access Application
+
+- **Laravel App:** http://localhost:8080
+- **MongoDB Admin UI:** http://localhost:8081
+  - Username: `admin`
+  - Password: `admin123`
+
+## 💻 Installation without Docker
+
+### 1. Clone & Install Dependencies
+
+```bash
+git clone <repository-url>
+cd company-profile
 composer install
 ```
 
-### 3. Environment Configuration
-
-Copy `.env.example` ke `.env`:
+### 2. Environment Configuration
 
 ```bash
 cp .env.example .env
 ```
 
-Update konfigurasi database di `.env`:
+Update `.env`:
 
 ```env
 DB_CONNECTION=mongodb
@@ -78,35 +128,16 @@ DB_USERNAME=
 DB_PASSWORD=
 ```
 
-### 4. Generate Application Key
+### 3. Setup Application
 
 ```bash
 php artisan key:generate
-```
-
-### 5. Create Storage Link
-
-```bash
 php artisan storage:link
-```
-
-### 6. Seed Database
-
-```bash
 php artisan db:seed
-```
-
-Ini akan membuat:
-- 2 user accounts (admin & editor)
-- 1 company profile default
-
-### 7. Run Application
-
-```bash
 php artisan serve
 ```
 
-Aplikasi akan berjalan di `http://127.0.0.1:8000`
+Access: http://127.0.0.1:8000
 
 ## 👤 Default Accounts
 
@@ -125,12 +156,13 @@ company-profile/
 ├── app/
 │   ├── Http/
 │   │   └── Controllers/
+│   │       ├── Api/
+│   │       │   ├── AuthController.php
+│   │       │   ├── ArticleController.php
+│   │       │   └── CompanyProfileController.php
 │   │       ├── Auth/
-│   │       │   ├── LoginController.php
-│   │       │   └── LogoutController.php
 │   │       ├── ArticleController.php
-│   │       ├── CompanyProfileController.php
-│   │       └── DashboardController.php
+│   │       └── CompanyProfileController.php
 │   └── Models/
 │       ├── User.php
 │       ├── Article.php
@@ -139,45 +171,117 @@ company-profile/
 │   └── seeders/
 │       ├── UserSeeder.php
 │       └── CompanyProfileSeeder.php
+├── docker/
+│   ├── mongodb/
+│   │   └── init-mongo.js
+│   ├── nginx/
+│   │   └── conf.d/
+│   │       └── default.conf
+│   └── php/
 ├── resources/
 │   └── views/
 │       ├── layouts/
-│       │   └── app.blade.php
 │       ├── auth/
-│       │   └── login.blade.php
 │       ├── articles/
-│       │   ├── index.blade.php
-│       │   ├── create.blade.php
-│       │   ├── edit.blade.php
-│       │   └── show.blade.php
 │       ├── company-profile/
-│       │   ├── index.blade.php
-│       │   └── edit.blade.php
 │       └── dashboard.blade.php
-└── routes/
-    └── web.php
+├── routes/
+│   ├── web.php
+│   └── api.php
+├── docker-compose.yml
+└── Dockerfile
 ```
 
 ## 🎯 Usage
 
-### Login
-1. Akses `http://127.0.0.1:8000/login`
-2. Masukkan email dan password
-3. Klik "Login"
+### Web Application
 
-### Manage Articles
-1. Dari dashboard, klik "Articles" di navbar
-2. Klik "Create New Article" untuk membuat artikel baru
-3. Isi form (Title, Content, Image, Status)
-4. Submit form
-5. Untuk edit/delete, gunakan tombol di table list
+1. **Login:** http://localhost:8080/login
+2. **Dashboard:** Manage articles and company profile
+3. **Articles:** Create, edit, delete articles
+4. **Company Profile:** Update company information
 
-### Manage Company Profile
-1. Dari dashboard, klik "Company Profile" di navbar
-2. Klik "Edit Profile"
-3. Update informasi perusahaan
-4. Upload logo (optional)
-5. Submit form
+### API Endpoints
+
+Base URL: `http://localhost:8080/api`
+
+**Authentication:**
+- `POST /login` - Login user
+- `POST /register` - Register new user
+
+**Articles:**
+- `GET /articles` - Get all articles
+- `GET /articles/{id}` - Get single article
+- `POST /admin/articles` - Create article
+- `PUT /admin/articles/{id}` - Update article
+- `DELETE /admin/articles/{id}` - Delete article
+
+**Company Profile:**
+- `GET /company-profile` - Get company profile
+- `PUT /admin/company-profile` - Update company profile
+
+See `POSTMAN-API-GUIDE.md` for detailed API documentation.
+
+## 🐳 Docker Commands
+
+### Container Management
+
+```bash
+# Start containers
+docker-compose up -d
+
+# Stop containers
+docker-compose down
+
+# Restart containers
+docker-compose restart
+
+# View logs
+docker-compose logs -f
+
+# View specific service logs
+docker-compose logs -f app
+docker-compose logs -f mongodb
+
+# Check container status
+docker-compose ps
+```
+
+### Application Commands
+
+```bash
+# Execute artisan commands
+docker-compose exec app php artisan <command>
+
+# Examples:
+docker-compose exec app php artisan route:list
+docker-compose exec app php artisan cache:clear
+docker-compose exec app php artisan config:clear
+
+# Composer commands
+docker-compose exec app composer install
+docker-compose exec app composer update
+
+# Access container shell
+docker-compose exec app bash
+
+# Access MongoDB shell
+docker-compose exec mongodb mongosh -u laravel -p laravelpassword company_profile
+```
+
+### Database Management
+
+```bash
+# Seed database
+docker-compose exec app php artisan db:seed
+
+# Access Laravel Tinker
+docker-compose exec app php artisan tinker
+
+# Test MongoDB connection
+docker-compose exec app php artisan tinker
+>>> DB::connection('mongodb')->getMongoDB()->command(['ping' => 1]);
+```
 
 ## 🗄️ Database Collections
 
@@ -232,115 +336,170 @@ company-profile/
 }
 ```
 
-## 🔒 Security
+## 🔧 Development Workflow
 
-- Password di-hash menggunakan bcrypt
-- CSRF protection enabled
-- Form validation di backend
-- File upload validation (type, size)
-- Authentication middleware untuk protected routes
+### Making Changes
 
-## 📝 API Endpoints
+**✅ No rebuild needed for:**
+- Controller changes
+- Model changes
+- View changes
+- Route changes
+- `.env` changes (just clear cache)
+- Logic updates
 
-### Authentication
-- `GET /login` - Show login form
-- `POST /login` - Process login
-- `POST /logout` - Logout user
+**🔄 Rebuild needed for:**
+- `Dockerfile` changes
+- `docker-compose.yml` changes
+- Nginx config changes
+- Installing new PHP extensions
 
-### Articles
-- `GET /articles` - List all articles
-- `GET /articles/create` - Show create form
-- `POST /articles` - Store new article
-- `GET /articles/{id}` - Show article detail
-- `GET /articles/{id}/edit` - Show edit form
-- `PUT /articles/{id}` - Update article
-- `DELETE /articles/{id}` - Delete article
+```bash
+# After changing Dockerfile or docker-compose.yml
+docker-compose down
+docker-compose up -d --build
+```
 
-### Company Profile
-- `GET /company-profile` - View company profile
-- `GET /company-profile/edit` - Show edit form
-- `PUT /company-profile` - Update company profile
+### Installing New Packages
+
+```bash
+# Install Composer package
+docker-compose exec app composer require vendor/package
+
+# Clear cache after .env changes
+docker-compose exec app php artisan config:clear
+docker-compose exec app php artisan cache:clear
+```
 
 ## 🐛 Troubleshooting
 
-### Error: "Class 'MongoDB\Driver\Manager' not found"
-Install MongoDB PHP extension:
+### Container Won't Start
 
-**Ubuntu/Debian:**
 ```bash
-sudo apt-get install php-mongodb
+# Check logs
+docker-compose logs -f
+
+# Rebuild containers
+docker-compose down
+docker-compose up -d --build
 ```
 
-**Windows:**
-Download `php_mongodb.dll` dan tambahkan di `php.ini`:
-```ini
-extension=mongodb
-```
+### Port Already in Use
 
-### Error: "Storage not linked"
-```bash
-php artisan storage:link
-```
+Edit `docker-compose.yml` and change ports:
 
-### Error: "Route not found"
-```bash
-php artisan route:clear
-php artisan config:clear
-php artisan cache:clear
+```yaml
+nginx:
+  ports:
+    - "9090:80"  # Change 8080 to 9090
+
+mongodb:
+  ports:
+    - "27018:27017"  # Change 27017 to 27018
 ```
 
 ### MongoDB Connection Failed
-Pastikan MongoDB service running:
 
-**Windows:**
-```bash
-net start MongoDB
+1. Check `.env` configuration:
+```env
+DB_HOST=mongodb  # Must be 'mongodb', not '127.0.0.1'
+DB_USERNAME=laravel
+DB_PASSWORD=laravelpassword
+DB_AUTHENTICATION_DATABASE=admin
 ```
 
-**Linux/Mac:**
+2. Clear cache:
 ```bash
-sudo systemctl start mongod
+docker-compose exec app php artisan config:clear
+```
+
+3. Test connection:
+```bash
+docker-compose exec app php artisan tinker
+>>> DB::connection('mongodb')->getMongoDB()->command(['ping' => 1]);
+```
+
+### Permission Issues
+
+```bash
+docker-compose exec app chmod -R 775 storage bootstrap/cache
+```
+
+### Clean Install
+
+```bash
+# Remove all containers and volumes (⚠️ deletes data!)
+docker-compose down -v
+
+# Rebuild everything
+docker-compose up -d --build
+
+# Reinstall dependencies
+docker-compose exec app composer install
+docker-compose exec app php artisan key:generate
+docker-compose exec app php artisan storage:link
+docker-compose exec app php artisan db:seed
 ```
 
 ## 🚀 Deployment
 
 ### Production Checklist
 
-1. **Set environment to production**
-   ```env
-   APP_ENV=production
-   APP_DEBUG=false
-   ```
+1. **Update environment:**
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://yourdomain.com
+```
 
-2. **Optimize Laravel**
-   ```bash
-   php artisan config:cache
-   php artisan route:cache
-   php artisan view:cache
-   ```
+2. **Optimize Laravel:**
+```bash
+docker-compose exec app php artisan config:cache
+docker-compose exec app php artisan route:cache
+docker-compose exec app php artisan view:cache
+```
 
-3. **Setup proper file permissions**
-   ```bash
-   chmod -R 775 storage bootstrap/cache
-   ```
+3. **Update MongoDB credentials:**
+- Use strong passwords
+- Remove Mongo Express from production
+- Enable MongoDB authentication
 
-4. **Use queue for background jobs** (optional)
-   ```bash
-   php artisan queue:work
-   ```
+4. **Setup SSL/TLS:**
+- Configure reverse proxy (Nginx/Traefik)
+- Use Let's Encrypt certificates
 
-5. **Setup backup untuk MongoDB**
-   ```bash
-   mongodump --db=company_profile --out=/backup/
-   ```
+5. **Backup strategy:**
+```bash
+# Backup MongoDB
+docker-compose exec mongodb mongodump --username=laravel --password=laravelpassword --db=company_profile --out=/backup
+```
 
-## 📄 License
+## 📊 Services & Ports
+
+| Service | Container Name | Port | Description |
+|---------|---------------|------|-------------|
+| Laravel | company-profile-app | - | PHP 8.2-FPM Application |
+| Nginx | company-profile-nginx | 8080 | Web Server |
+| MongoDB | company-profile-mongodb | 27017 | Database |
+| Mongo Express | company-profile-mongo-express | 8081 | MongoDB Admin UI |
+
+## 🔒 Security
+
+- Passwords hashed with bcrypt
+- CSRF protection enabled
+- Form validation (backend)
+- File upload validation (type, size)
+- Authentication middleware for protected routes
+- MongoDB user authentication
+- Docker network isolation
+
+## 📝 License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 ## 👨‍💻 Author
 
-Developed with ❤️ using Laravel 11 & MongoDB
+Developed with ❤️ using Laravel 11, MongoDB & Docker
 
 ## 🤝 Contributing
 
@@ -348,8 +507,8 @@ Contributions, issues, and feature requests are welcome!
 
 ## 📧 Support
 
-For support, email your-email@example.com or create an issue in this repository.
+For support, create an issue in this repository.
 
 ---
 
-**Happy Coding! 🚀
+**Built with Docker 🐳 | Powered by Laravel 11 & MongoDB**
