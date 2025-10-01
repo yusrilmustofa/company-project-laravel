@@ -49,6 +49,21 @@
                 </div>
 
                 <div class="mb-3">
+                    <label for="category_id" class="form-label">Category <span class="text-danger">*</span></label>
+                    <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required>
+                        <option value="" disabled>-- Select Category --</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->_id }}" {{ old('category_id', $article->category_id) == $category->_id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
                     <label for="image" class="form-label">Featured Image</label>
                     
                     @if($article->image)

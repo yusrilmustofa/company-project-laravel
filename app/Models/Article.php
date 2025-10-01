@@ -18,6 +18,7 @@ class Article extends Model
         'author',
         'published_at',
         'status', // draft, published
+        'category_id',
     ];
 
     protected function casts(): array
@@ -37,5 +38,10 @@ class Article extends Model
                 $article->slug = Str::slug($article->title);
             }
         });
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

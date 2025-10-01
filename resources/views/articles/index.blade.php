@@ -30,6 +30,7 @@
                         <tr>
                             <th>Title</th>
                             <th>Author</th>
+                            <th>Category</th>
                             <th>Status</th>
                             <th>Published At</th>
                             <th>Actions</th>
@@ -45,6 +46,13 @@
                                 @endif
                             </td>
                             <td>{{ $article->author }}</td>
+                            <td>
+                                @if($article->relationLoaded('category') ? $article->category : $article->category()->first())
+                                    {{ optional($article->category)->name ?? optional($article->category()->first())->name }}
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </td>
                             <td>
                                 @if($article->status === 'published')
                                     <span class="badge bg-success">Published</span>

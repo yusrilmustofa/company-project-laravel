@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyProfileController;
 
 // Public routes
@@ -26,6 +27,9 @@ Route::middleware('auth')->group(function () {
     
     // Articles
     Route::resource('articles', ArticleController::class);
+    
+    // Categories
+    Route::resource('categories', CategoryController::class)->except(['show']);
     
     // Company Profile
     Route::get('/company-profile', [CompanyProfileController::class, 'index'])->name('company-profile.index');
