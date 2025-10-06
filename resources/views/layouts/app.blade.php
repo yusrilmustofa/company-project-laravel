@@ -20,8 +20,9 @@
 </head>
 
 <body class="p-3 h-screen">
-  @auth
   <div class="flex w-full h-full rounded-xl gap-3">
+    @auth
+
     <nav class="w-1/6 bg-slate-200 rounded-xl p-6 flex flex-col gap-6">
       <p class="text-lg border-b pb-4 border-slate-400 !text-slate-800">TK Group 5</p>
 
@@ -35,12 +36,12 @@
         </form>
       </div>
     </nav>
+    @endauth
 
     <div class="grow overflow-y-auto">
       @yield('content')
     </div>
   </div>
-  @endauth
 
   @stack('scripts')
 </body>

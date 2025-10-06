@@ -35,7 +35,12 @@
 
   <div class="w-full mt-10 grow flex">
     <div class="flex-1">
-      <p class="text-lg font-semibold">Top Articles</p>
+      <div class="flex justify-between items-center">
+        <p class="text-lg font-semibold">Top Articles</p>
+        <a href="{{ route('articles.create') }}" class="text-blue-400 text-xs p-2 rounded-lg hover:bg-slate-100">
+          Create New Article
+        </a>
+      </div>
 
       <div class="mt-4 flex flex-col gap-3">
         @forelse($topArticles as $article)
