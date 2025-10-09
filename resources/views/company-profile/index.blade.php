@@ -42,7 +42,8 @@
         <div class="space-y-3 px-6 py-4 text-sm">
           <p><span class="block text-gray-500">Email</span><span class="font-medium">{{ $profile->email }}</span></p>
           <p><span class="block text-gray-500">Phone</span><span class="font-medium">{{ $profile->phone }}</span></p>
-          <p><span class="block text-gray-500">Address</span><span class="font-medium">{{ $profile->address }}</span></p>
+          <p><span class="block text-gray-500">Address</span><span class="font-medium">{{ $profile->address }}</span>
+          </p>
         </div>
       </div>
     </div>
@@ -138,5 +139,5 @@
     </a>
   </div>
   @endif
-  </div>
+</div>
 @endsection
