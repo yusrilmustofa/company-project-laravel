@@ -3,73 +3,68 @@
 @section('title', 'Login')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow-sm mt-5">
-                <div class="card-header bg-primary text-white text-center">
-                    <h4 class="mb-0">Login</h4>
-                </div>
-                <div class="card-body p-4">
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email Address</label>
-                            <input type="email" 
-                                   class="form-control @error('email') is-invalid @enderror" 
-                                   id="email" 
-                                   name="email" 
-                                   value="{{ old('email') }}" 
-                                   required 
-                                   autofocus>
-                            @error('email')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" 
-                                   class="form-control @error('password') is-invalid @enderror" 
-                                   id="password" 
-                                   name="password" 
-                                   required>
-                            @error('password')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                            <label class="form-check-label" for="remember">
-                                Remember Me
-                            </label>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">Login</button>
-                    </form>
-
-                    <hr class="my-4">
-
-                    <div class="text-center text-muted">
-                        <small>Demo Account:</small><br>
-                        <small><strong>Email:</strong> superadmin@company.com</small><br>
-                        <small><strong>Password:</strong> password123</small>
-                    </div>
-                </div>
-            </div>
+<div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+  <div class="w-full max-w-md">
+    <div class="bg-white shadow-lg rounded-2xl overflow-hidden border border-gray-100">
+      <div class="bg-indigo-600 text-white text-center py-5">
+        <h4 class="text-xl font-semibold tracking-wide">Login</h4>
+      </div>
+      <div class="p-6 sm:p-8">
+        @if ($errors->any())
+        <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+          <ul class="list-disc list-inside space-y-1">
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+          </ul>
         </div>
+        @endif
+
+        <form method="POST" action="{{ route('login') }}" class="space-y-5">
+          @csrf
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus
+              class="block w-full rounded-lg placeholder-gray-400 text-gray-900 {{ $errors->has('email') ? 'ring-1 ring-red-500 border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500' }} border p-2">
+            @error('email')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" id="password" name="password" required
+              class="block w-full rounded-lg placeholder-gray-400 text-gray-900 {{ $errors->has('password') ? 'ring-1 ring-red-500 border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500' }}  border p-2">
+            @error('password')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+          </div>
+
+          <div class="flex items-center justify-between">
+            <label class="inline-flex items-center gap-2">
+              <input id="remember" name="remember" type="checkbox"
+                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+              <span class="text-sm text-gray-700">Remember me</span>
+            </label>
+            <!-- Placeholder for future "Forgot password?" link if needed -->
+          </div>
+
+          <button type="submit"
+            class="inline-flex w-full justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors">
+            Login
+          </button>
+        </form>
+
+        <div class="mt-8 text-center text-gray-500">
+          <p class="text-xs uppercase tracking-widest">Demo Account</p>
+          <div class="mt-2 text-sm">
+            <p><span class="font-medium text-gray-700">Email:</span> superadmin@company.com</p>
+            <p><span class="font-medium text-gray-700">Password:</span> password123</p>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 @endsection

@@ -3,137 +3,141 @@
 @section('title', 'Company Profile')
 
 @section('content')
-<div class="container">
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="d-flex justify-content-between align-items-center">
-                <h1>Company Profile</h1>
-                <a href="{{ route('company-profile.edit') }}" class="btn btn-primary">Edit Profile</a>
-            </div>
+<div class="max-w-7xl mx-auto p-4 md:p-6">
+  <div class="mb-6">
+    <div class="flex items-center justify-between">
+      <h1 class="text-2xl md:text-3xl font-semibold tracking-tight">Company Profile</h1>
+      <a href="{{ route('company-profile.edit') }}"
+        class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+        Edit Profile
+      </a>
+    </div>
+  </div>
+
+  @if(session('success'))
+  <div class="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+    {{ session('success') }}
+  </div>
+  @endif
+
+  @if($profile)
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+    <div class="md:col-span-1 space-y-6">
+      <div class="rounded-xl border border-gray-200 bg-white p-6 text-center shadow-sm">
+        @if($profile->logo)
+        <img src="{{ asset('storage/' . $profile->logo) }}" alt="{{ $profile->company_name }}"
+          class="mx-auto mb-4 h-auto max-w-[200px]">
+        @else
+        <div class="mb-4 rounded-lg border border-dashed border-gray-300 bg-gray-50 p-10">
+          <span class="text-sm font-medium text-gray-500">No Logo</span>
         </div>
+        @endif
+        <h4 class="text-lg font-semibold">{{ $profile->company_name }}</h4>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b border-gray-200 px-6 py-3">
+          <strong class="text-sm">Contact Information</strong>
+        </div>
+        <div class="space-y-3 px-6 py-4 text-sm">
+          <p><span class="block text-gray-500">Email</span><span class="font-medium">{{ $profile->email }}</span></p>
+          <p><span class="block text-gray-500">Phone</span><span class="font-medium">{{ $profile->phone }}</span></p>
+          <p><span class="block text-gray-500">Address</span><span class="font-medium">{{ $profile->address }}</span>
+          </p>
+        </div>
+      </div>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <div class="md:col-span-2 space-y-6">
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b border-gray-200 px-6 py-3">
+          <strong class="text-sm">About Company</strong>
         </div>
-    @endif
-
-    @if($profile)
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-body text-center">
-                    @if($profile->logo)
-                        <img src="{{ asset('storage/' . $profile->logo) }}" 
-                             alt="{{ $profile->company_name }}" 
-                             class="img-fluid mb-3"
-                             style="max-width: 200px;">
-                    @else
-                        <div class="bg-light p-5 mb-3">
-                            <h1 class="text-muted">Logo</h1>
-                        </div>
-                    @endif
-                    <h4>{{ $profile->company_name }}</h4>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <strong>Contact Information</strong>
-                </div>
-                <div class="card-body">
-                    <p><strong>Email:</strong><br>{{ $profile->email }}</p>
-                    <p><strong>Phone:</strong><br>{{ $profile->phone }}</p>
-                    <p><strong>Address:</strong><br>{{ $profile->address }}</p>
-                </div>
-            </div>
+        <div class="px-6 py-4">
+          <p class="text-sm leading-6 text-gray-700">{{ $profile->description }}</p>
         </div>
+      </div>
 
-        <div class="col-md-8">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <strong>About Company</strong>
-                </div>
-                <div class="card-body">
-                    <p>{{ $profile->description }}</p>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <strong>Vision</strong>
-                </div>
-                <div class="card-body">
-                    <p>{{ $profile->vision }}</p>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <strong>Mission</strong>
-                </div>
-                <div class="card-body">
-                    <p>{{ $profile->mission }}</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <strong>Social Media</strong>
-                </div>
-                <div class="card-body">
-                    @if($profile->social_media)
-                        <div class="row">
-                            @if(!empty($profile->social_media['facebook']))
-                            <div class="col-md-6 mb-2">
-                                <strong>Facebook:</strong><br>
-                                <a href="{{ $profile->social_media['facebook'] }}" target="_blank">
-                                    {{ $profile->social_media['facebook'] }}
-                                </a>
-                            </div>
-                            @endif
-
-                            @if(!empty($profile->social_media['instagram']))
-                            <div class="col-md-6 mb-2">
-                                <strong>Instagram:</strong><br>
-                                <a href="{{ $profile->social_media['instagram'] }}" target="_blank">
-                                    {{ $profile->social_media['instagram'] }}
-                                </a>
-                            </div>
-                            @endif
-
-                            @if(!empty($profile->social_media['twitter']))
-                            <div class="col-md-6 mb-2">
-                                <strong>Twitter:</strong><br>
-                                <a href="{{ $profile->social_media['twitter'] }}" target="_blank">
-                                    {{ $profile->social_media['twitter'] }}
-                                </a>
-                            </div>
-                            @endif
-
-                            @if(!empty($profile->social_media['linkedin']))
-                            <div class="col-md-6 mb-2">
-                                <strong>LinkedIn:</strong><br>
-                                <a href="{{ $profile->social_media['linkedin'] }}" target="_blank">
-                                    {{ $profile->social_media['linkedin'] }}
-                                </a>
-                            </div>
-                            @endif
-                        </div>
-                    @else
-                        <p class="text-muted">No social media links added.</p>
-                    @endif
-                </div>
-            </div>
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b border-gray-200 px-6 py-3">
+          <strong class="text-sm">Vision</strong>
         </div>
+        <div class="px-6 py-4">
+          <p class="text-sm leading-6 text-gray-700">{{ $profile->vision }}</p>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b border-gray-200 px-6 py-3">
+          <strong class="text-sm">Mission</strong>
+        </div>
+        <div class="px-6 py-4">
+          <p class="text-sm leading-6 text-gray-700">{{ $profile->mission }}</p>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b border-gray-200 px-6 py-3">
+          <strong class="text-sm">Social Media</strong>
+        </div>
+        <div class="px-6 py-4">
+          @if($profile->social_media)
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            @if(!empty($profile->social_media['facebook']))
+            <div>
+              <span class="block text-sm text-gray-500">Facebook</span>
+              <a href="{{ $profile->social_media['facebook'] }}" target="_blank"
+                class="truncate text-sm font-medium text-indigo-600 hover:underline">
+                {{ $profile->social_media['facebook'] }}
+              </a>
+            </div>
+            @endif
+
+            @if(!empty($profile->social_media['instagram']))
+            <div>
+              <span class="block text-sm text-gray-500">Instagram</span>
+              <a href="{{ $profile->social_media['instagram'] }}" target="_blank"
+                class="truncate text-sm font-medium text-indigo-600 hover:underline">
+                {{ $profile->social_media['instagram'] }}
+              </a>
+            </div>
+            @endif
+
+            @if(!empty($profile->social_media['twitter']))
+            <div>
+              <span class="block text-sm text-gray-500">Twitter</span>
+              <a href="{{ $profile->social_media['twitter'] }}" target="_blank"
+                class="truncate text-sm font-medium text-indigo-600 hover:underline">
+                {{ $profile->social_media['twitter'] }}
+              </a>
+            </div>
+            @endif
+
+            @if(!empty($profile->social_media['linkedin']))
+            <div>
+              <span class="block text-sm text-gray-500">LinkedIn</span>
+              <a href="{{ $profile->social_media['linkedin'] }}" target="_blank"
+                class="truncate text-sm font-medium text-indigo-600 hover:underline">
+                {{ $profile->social_media['linkedin'] }}
+              </a>
+            </div>
+            @endif
+          </div>
+          @else
+          <p class="text-sm text-gray-500">No social media links added.</p>
+          @endif
+        </div>
+      </div>
     </div>
-    @else
-    <div class="alert alert-warning">
-        <p>No company profile found. Please create one.</p>
-        <a href="{{ route('company-profile.edit') }}" class="btn btn-primary">Create Profile</a>
-    </div>
-    @endif
+  </div>
+  @else
+  <div class="rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-900">
+    <p class="mb-3">No company profile found. Please create one.</p>
+    <a href="{{ route('company-profile.edit') }}"
+      class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+      Create Profile
+    </a>
+  </div>
+  @endif
 </div>
 @endsection
