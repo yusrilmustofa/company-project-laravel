@@ -33,9 +33,8 @@ class ArticleController extends Controller
             'category_id' => 'required|exists:mongodb.categories,_id',
         ]);
 
-        // FIX: Gunakan Auth facade
+        // Set author dari user yang login
         $validated['author'] = Auth::user()->name;
-        $validated['slug'] = Str::slug($validated['title']);
         
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('articles', 'public');
@@ -72,7 +71,7 @@ class ArticleController extends Controller
             'category_id' => 'required|exists:mongodb.categories,_id',
         ]);
 
-        $validated['slug'] = Str::slug($validated['title']);
+        // Slug akan di-generate otomatis oleh model jika diperlukan
 
         if ($request->hasFile('image')) {
             // Delete old image
