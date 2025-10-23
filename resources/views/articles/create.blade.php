@@ -88,6 +88,23 @@
           </div>
         </div>
 
+        <div>
+          <label for="level_id" class="block text-sm font-medium text-gray-700">Article Level (Optional)</label>
+          <select id="level_id" name="level_id"
+            class="mt-1 block w-full rounded-md bg-white shadow-sm {{ $errors->has('level_id') ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500' }}">
+            <option value="" {{ old('level_id') ? '' : 'selected' }}>-- No Level --</option>
+            @foreach($levels as $level)
+            <option value="{{ $level->_id }}" {{ old('level_id') == $level->_id ? 'selected' : '' }}>
+              {{ $level->name }}
+            </option>
+            @endforeach
+          </select>
+          <p class="mt-2 text-xs text-gray-500">Select an article level to categorize the difficulty or type of content. This is optional.</p>
+          @error('level_id')
+          <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+          @enderror
+        </div>
+
         <div class="flex items-center justify-between pt-4">
           <a href="{{ route('articles.index') }}"
             class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">

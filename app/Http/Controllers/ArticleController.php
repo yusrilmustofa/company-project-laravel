@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\ArticleLevel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -20,7 +21,8 @@ class ArticleController extends Controller
     public function create()
     {
         $categories = Category::where('status', 'active')->orderBy('name')->get();
-        return view('articles.create', compact('categories'));
+        $levels = ArticleLevel::where('status', 'active')->ordered()->get();
+        return view('articles.create', compact('categories', 'levels'));
     }
 
     public function store(Request $request)
@@ -31,6 +33,7 @@ class ArticleController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'status' => 'required|in:draft,published',
             'category_id' => 'required|exists:mongodb.categories,_id',
+            'level_id' => 'nullable|exists:mongodb.article_levels,_id',
         ]);
 
         // Set author dari user yang login
@@ -58,7 +61,8 @@ class ArticleController extends Controller
     public function edit(Article $article)
     {
         $categories = Category::where('status', 'active')->orderBy('name')->get();
-        return view('articles.edit', compact('article', 'categories'));
+        $levels = ArticleLevel::where('status', 'active')->ordered()->get();
+        return view('articles.edit', compact('article', 'categories', 'levels'));
     }
 
     public function update(Request $request, Article $article)
@@ -69,6 +73,7 @@ class ArticleController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'status' => 'required|in:draft,published',
             'category_id' => 'required|exists:mongodb.categories,_id',
+            'level_id' => 'nullable|exists:mongodb.article_levels,_id',
         ]);
 
         // Slug akan di-generate otomatis oleh model jika diperlukan

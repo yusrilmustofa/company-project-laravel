@@ -27,7 +27,9 @@
       <div class="flex flex-col gap-3 grow ">
         <a href="{{ route('dashboard') }}" class="!no-underline !text-slate-800">Dashboard</a>
         <a href="{{ route('articles.index') }}" class="!no-underline !text-slate-800">Articles</a>
+        <a href="{{ route('categories.index') }}" class="!no-underline !text-slate-800">Categories</a>
         <a href="{{ route('company-profile.index') }}" class="!no-underline !text-slate-800">Company Profile</a>
+        <a href="{{ route('article-levels.index') }}" class="!no-underline !text-slate-800">Article Levels</a>
         <form action="{{ route('logout') }}" method="POST" class="mt-auto">
           @csrf
           <button type="submit" class="btn btn-link nav-link">Logout</button>
