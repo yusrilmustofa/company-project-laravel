@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyProfileController;
+use App\Http\Controllers\ArticleLevelController;
 
 // Public routes
 Route::get('/', function () {
@@ -30,7 +31,11 @@ Route::middleware('auth')->group(function () {
     
     // Categories
     Route::resource('categories', CategoryController::class)->except(['show']);
-    
+
+    // Article Levels
+    Route::resource('article-levels', ArticleLevelController::class)->except(['show']);
+    Route::put('article-levels/order', [ArticleLevelController::class, 'updateOrder'])->name('article-levels.updateOrder');
+
     // Company Profile
     Route::get('/company-profile', [CompanyProfileController::class, 'index'])->name('company-profile.index');
     Route::get('/company-profile/edit', [CompanyProfileController::class, 'edit'])->name('company-profile.edit');

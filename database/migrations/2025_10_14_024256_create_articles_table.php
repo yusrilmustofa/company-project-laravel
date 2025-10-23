@@ -23,11 +23,13 @@ return new class extends Migration
             $table->timestamp('published_at')->nullable();
             $table->enum('status', ['draft', 'published'])->default('draft');
             $table->string('category_id');
+            $table->string('level_id')->nullable();
             $table->timestamps();
-            
+
             // Index untuk performa
             $table->index(['status', 'published_at']);
             $table->index('category_id');
+            $table->index('level_id');
         });
     }
 

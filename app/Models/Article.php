@@ -23,6 +23,7 @@ class Article extends Model
         'published_at',
         'status', // draft, published
         'category_id',
+        'level_id',
     ];
 
     protected function casts(): array
@@ -60,5 +61,30 @@ class Article extends Model
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function level()
+    {
+        return $this->belongsTo(ArticleLevel::class, 'level_id');
+    }
+
+    // Scope untuk mengambil artikel yang dipublikasi
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'published')
+                    ->whereNotNull('published_at')
+                    ->where('published_at', '<=', now());
+    }
+
+    // Scope untuk mengambil artikel berdasarkan kategori
+    public function scopeByCategory($query, $categoryId)
+    {
+        return $query->where('category_id', $categoryId);
+    }
+
+    // Scope untuk mengambil artikel berdasarkan level
+    public function scopeByLevel($query, $levelId)
+    {
+        return $query->where('level_id', $levelId);
     }
 }

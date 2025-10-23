@@ -42,6 +42,26 @@
               </span>
               @endif
 
+              @php
+                $articleLevel = null;
+                try {
+                  $articleLevel = ($article->relationLoaded('level') ? $article->level : $article->level()->first());
+                } catch (\Exception $e) {
+                  // Handle error gracefully
+                }
+              @endphp
+              @if($articleLevel)
+              <span
+                class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                data-level-color="{{ $articleLevel->color ?? '#6c757d' }}"
+                title="Article Level: {{ $articleLevel->name }}">
+                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd" />
+                </svg>
+                {{ $articleLevel->name }}
+              </span>
+              @endif
+
               <span
                 class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {{ $article->status === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">
                 {{ ucfirst($article->status) }}
@@ -74,10 +94,25 @@
 
       <div class="my-6 border-t border-slate-200"></div>
 
-      <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+      <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
         <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-3">
           <dt class="text-slate-500">Slug</dt>
           <dd class="mt-1 font-medium text-slate-800 dark:text-slate-200">{{ $article->slug }}</dd>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-3">
+          <dt class="text-slate-500">Article Level</dt>
+          <dd class="mt-1">
+            @if($articleLevel)
+            <span data-level-detail-color="{{ $articleLevel->color ?? '#6c757d' }}" class="text-xs font-medium inline-flex items-center">
+              <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd" />
+              </svg>
+              {{ $articleLevel->name }}
+            </span>
+            @else
+            <span class="text-slate-400">-</span>
+            @endif
+          </dd>
         </div>
         <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-3">
           <dt class="text-slate-500">Created</dt>
@@ -93,4 +128,41 @@
     </div>
   </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Apply level colors to badges
+    const levelBadges = document.querySelectorAll('[data-level-color]');
+    levelBadges.forEach(function(badge) {
+        const color = badge.getAttribute('data-level-color');
+        if (color && color.match(/^#[0-9A-Fa-f]{6}$/)) {
+            badge.style.backgroundColor = color;
+            badge.style.color = 'white';
+        } else if (color) {
+            // Fallback to default color if invalid
+            badge.style.backgroundColor = '#6c757d';
+            badge.style.color = 'white';
+        }
+    });
+
+    // Apply level colors to detail badges
+    const detailBadges = document.querySelectorAll('[data-level-detail-color]');
+    detailBadges.forEach(function(badge) {
+        const color = badge.getAttribute('data-level-detail-color');
+        if (color && color.match(/^#[0-9A-Fa-f]{6}$/)) {
+            badge.style.backgroundColor = color;
+            badge.style.color = 'white';
+            badge.style.padding = '2px 8px';
+            badge.style.borderRadius = '9999px';
+        } else if (color) {
+            badge.style.backgroundColor = '#6c757d';
+            badge.style.color = 'white';
+            badge.style.padding = '2px 8px';
+            badge.style.borderRadius = '9999px';
+        }
+    });
+});
+</script>
+@endpush
 @endsection
